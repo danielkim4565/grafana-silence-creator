@@ -109,7 +109,7 @@ if $end_specified; then
 else
     end="$(date -u -d "$start +$days days +$hours hours +$minutes minutes +$seconds seconds" --iso-8601=seconds)"
 fi
-
+echo $end
 # Make a curl request to create a silence in Grafana
 curl -s \
     -d '{

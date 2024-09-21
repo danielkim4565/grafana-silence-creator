@@ -10,13 +10,13 @@ This script creates a silence in a Grafana instance using specified parameters.
 
 ## Parameters
 
-- `-a`: Start time (required if `-c` is not used)
+- `-a`: Start time in UTC time (required if `-c` is not used)
 - `-n`: Name of the label (required)
 - `-v`: Value the label will match (required)
 - `-u`: URL of the Grafana instance (required) 
 - `-b`: Bearer token (required)
 - `-c`: Use current date for start time (required if `-a` is not used)
-- `-e`: End time (optional, cannot be used with `-d`, `-h`, `-m`, or `-a`)
+- `-e`: End time in UTC time (optional, cannot be used with `-d`, `-h`, `-m`, or `-a`)
 - `-d`: Number of days from start time for end time (optional, cannot be used with `-e`)
 - `-h`: Number of hours from start time for end time (optional, cannot be used with `-e`)
 - `-m`: Number of minutes from start time for end time (optional, cannot be used with `-e`)
