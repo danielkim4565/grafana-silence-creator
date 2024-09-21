@@ -1,8 +1,10 @@
 #!/bin/bash
 
+#!/bin/bash
+
 function usage {
-    echo "usage: $0 [-S start] [-e end] -n name -v value -u url -b bearer [-c] [-d days] [-h hours] [-m minutes] [-s seconds]"
-    echo "  -S: start time"
+    echo "usage: $0 [-a start] [-e end] -n name -v value -u url -b bearer [-c] [-d days] [-h hours] [-m minutes] [-s seconds]"
+    echo "  -a: start time"
     echo "  -n: name of label"
     echo "  -v: the value the label will match"
     echo "  -u: url of grafana instance"
@@ -13,9 +15,9 @@ function usage {
     echo "  -h: number of hours from start time for end time"
     echo "  -m: number of minutes from start time for end time"
     echo "  -s: number of seconds from start time for end time"
-    echo "  Note: You must specify either -s or -c for the start time, and at least one of -e, -d, -h, -m, or -s for the end time."
+    echo "  Note: You must specify either -a or -c for the start time, and at least one of -e, -d, -h, -m, or -s for the end time."
     echo "  Note: The -d, -h, -m, and -s flags will be added together to calculate the end time."
-    echo "  Here is an example: $0 -s \"September 6, 2024 3:16PM\" -n grafana_folder -v Prod8 -u vfl-061.engage.sas.com -b token -d 1 -h 2 -m 30 -s 45"
+    echo "  Here is an example: $0 -a \"September 6, 2024 3:16PM\" -n grafana_folder -v Prod8 -u vfl-061.engage.sas.com -b token -d 1 -h 2 -m 30 -s 45"
 }
 
 use_current_date=false
@@ -28,41 +30,41 @@ minutes=0
 seconds=0
 end_specified=false
 
-while getopts ":S:e:n:v:u:b:cd:h:m:s:" opt; do
-  case $opt in
-    S) start="$OPTARG"
-       start_specified=true
-    ;;
-    e) end="$OPTARG"
-       end_specified=true
-    ;;
-    n) name="$OPTARG"
-    ;;
-    v) value="$OPTARG"
-    ;;
-    u) url="$OPTARG"
-    ;;
-    b) bearer="$OPTARG"
-    ;;
-    c) use_current_date=true
-    ;;
-    d) days="$OPTARG"
-    ;;
-    h) hours="$OPTARG"
-    ;;
-    m) minutes="$OPTARG"
-    ;;
-    s) seconds="$OPTARG"
-    ;;
-    \?) echo "Invalid option -$OPTARG" >&2
-        usage
-        exit 1
-    ;;
-    :) echo "Option -$OPTARG requires an argument." >&2
-       usage
-       exit 1
-    ;;
-  esac
+while getopts ":a:e:n:v:u:b:cd:h:m:s:" opt; do
+    case $opt in
+        a) start="$OPTARG"
+           start_specified=true
+        ;;
+        e) end="$OPTARG"
+           end_specified=true
+        ;;
+        n) name="$OPTARG"
+        ;;
+        v) value="$OPTARG"
+        ;;
+        u) url="$OPTARG"
+        ;;
+        b) bearer="$OPTARG"
+        ;;
+        c) use_current_date=true
+        ;;
+        d) days="$OPTARG"
+        ;;
+        h) hours="$OPTARG"
+        ;;
+        m) minutes="$OPTARG"
+        ;;
+        s) seconds="$OPTARG"
+        ;;
+        \?) echo "Invalid option -$OPTARG" >&2
+            usage
+            exit 1
+        ;;
+        :) echo "Option -$OPTARG requires an argument." >&2
+           usage
+           exit 1
+        ;;
+    esac
 done
 
 if [ -z "$name" ] || [ -z "$value" ] || [ -z "$url" ] || [ -z "$bearer" ]; then
@@ -109,7 +111,7 @@ else
 fi
 
 # Make a curl request to create a silence in Grafana
-curl -v \
+curl -s \
     -d '{
             "comment": "",
             "createdBy": "admin",
@@ -127,8 +129,8 @@ curl -v \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $bearer" \
     -H 'Accept: application/json' \
-    "https://$url/grafana/api/alertmanager/grafana/api/v2/silences"
+    "https://$url/api/alertmanager/grafana/api/v2/silences"
 
 # curl -v \
 # -H "Authorization: Bearer $bearer" \
-# "https://$url/grafana/api/alertmanager/grafana/api/v2/silences"
+# "https://$url/api/alertmanager/grafana/api/v2/silences"
