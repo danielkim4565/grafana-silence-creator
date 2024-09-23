@@ -1,4 +1,4 @@
-# grafana-ailence-creator
+# grafana-silence-creator
 
 This script creates a silence in a Grafana instance using specified parameters.
 
